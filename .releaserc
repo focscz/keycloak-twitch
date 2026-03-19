@@ -1,0 +1,69 @@
+{
+  "branches": [
+    "master"
+  ],
+  "plugins": [
+    [
+      "@semantic-release/commit-analyzer",
+      {
+        "preset": "conventionalcommits",
+        "releaseRules": [
+          {
+            "breaking": true,
+            "release": "major"
+          },
+          {
+            "revert": true,
+            "release": "patch"
+          },
+          {
+            "type": "feat",
+            "release": "minor"
+          },
+          {
+            "type": "*",
+            "release": "patch"
+          },
+          {
+            "subject": "*",
+            "release": "patch"
+          }
+        ]
+      }
+    ],
+    "@semantic-release/release-notes-generator",
+    "@semantic-release/changelog",
+    [
+      "@terrestris/maven-semantic-release",
+      {
+        "mavenTarget": "deploy",
+        "clean": false,
+        "updateSnapshotVersion": true,
+        "settingsPath": "/home/runner/.m2/settings.xml",
+        "processAllModules": true
+      }
+    ],
+    [
+      "@semantic-release/git",
+      {
+        "assets": [
+          "CHANGELOG.md", "pom.xml", "**/pom.xml"
+        ],
+        "message": "chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+      }
+    ],
+    [
+      "@semantic-release/github",
+      {
+        "assets": [
+          {
+            "path": "target/*.jar",
+            "label": "Maven JAR"
+          }
+        ],
+        "successComment": false,
+        "failTitle": false
+      }
+    ]
+  ]
+}
